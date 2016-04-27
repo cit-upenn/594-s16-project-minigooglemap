@@ -89,17 +89,18 @@ public class MapGraph {
 		headNode.addEdge(newEdge);
 	}
 	
-	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end) {
+	// Note: Every time a vertex is explored, append it to nodeSearched.
+	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
 		return null;
 	}
 	
-	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint end) {
+	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
 		return null;
 	}
 	
-	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint end) {
+	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
 		return null;
 	}
