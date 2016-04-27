@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The class represent the node in the roadgraph
+ * The class represents the node in the roadgraph
  * @author Qiannan
  *
  */
@@ -80,6 +80,7 @@ public class MapNode {
 	 * @return set view of current node's neighbors
 	 */
 	public Set<MapNode> getNeighbors() {
+		//TODO implement
 		return null;
 	}
 	
@@ -88,7 +89,7 @@ public class MapNode {
 	 * @param edge
 	 */
 	public void addEdge(MapEdge edge) {
-		
+		//TODO implement
 	}
 	
 	
