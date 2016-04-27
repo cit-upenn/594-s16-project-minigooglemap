@@ -5,6 +5,11 @@ import geography.GeographicPoint;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The class represent the node in the roadgraph
+ * @author Qiannan
+ *
+ */
 public class MapNode {
 	private Set<MapEdge> edges;
 	private GeographicPoint location;
@@ -15,7 +20,7 @@ public class MapNode {
 	 * Constructor of the class
 	 * @param location the location represented by the GeographicPoint
 	 */
-	MapNode(GeographicPoint location) {
+	public MapNode(GeographicPoint location) {
 		this.location = location;
 		edges = new HashSet<MapEdge>();
 		distance = 0.0;
@@ -123,5 +128,7 @@ public class MapNode {
 		}
 		return sb.toString();
 	}
+	
+	
 	
 }
