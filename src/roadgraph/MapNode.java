@@ -80,8 +80,11 @@ public class MapNode {
 	 * @return set view of current node's neighbors
 	 */
 	public Set<MapNode> getNeighbors() {
-		//TODO implement
-		return null;
+		Set<MapNode> neighbors = new HashSet<>();
+		for (MapEdge edge : edges) {
+			neighbors.add(edge.getTail());
+		}
+		return neighbors;
 	}
 	
 	/**
@@ -89,7 +92,9 @@ public class MapNode {
 	 * @param edge
 	 */
 	public void addEdge(MapEdge edge) {
-		//TODO implement
+		// the caller from MapGraph's addEdge guarantees the edge's head is 
+		//  current node so no extra examine 
+		edges.add(edge);
 	}
 	
 	
