@@ -67,8 +67,26 @@ public class MapGraph {
 		}
 	}
 	
-	public void addEdge() {
-		//TODO: how many args??
+	/**
+	 * Add edge to this graph
+	 * @param head the head of the directed edge
+	 * @param tail the tail of the directed edge
+	 * @param roadName road name of the edge
+	 * @param roadType road type of the edge
+	 * @param length length of the edge
+	 */
+	public void addEdge(GeographicPoint head, GeographicPoint tail, String roadName, String roadType, double length) {
+		MapNode headNode = vertexMap.get(head);
+		MapNode tailNode = vertexMap.get(tail);
+		if (headNode == null) {
+			throw new NullPointerException("headnode is not in the graph");
+		}
+		if (tailNode == null) {
+			throw new NullPointerException("tailnode is not in the graph");
+		}
+		MapEdge newEdge = new MapEdge(headNode, tailNode, roadName, roadType, length);
+		edges.add(newEdge);
+		headNode.addEdge(newEdge);
 	}
 	
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end) {

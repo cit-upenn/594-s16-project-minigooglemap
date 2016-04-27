@@ -21,7 +21,7 @@ public class MapEdge {
 	 * @param tail tail of the directed edge
 	 * @param length length od the edge
 	 */
-	public MapEdge(String roadName, String roadType, MapNode head, MapNode tail, double length) {
+	public MapEdge(MapNode head, MapNode tail, String roadName, String roadType, double length) {
 		this.roadName = roadName;
 		this.roadType = roadType;
 		this.head = head;
