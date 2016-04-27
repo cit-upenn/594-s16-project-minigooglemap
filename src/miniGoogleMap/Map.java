@@ -27,6 +27,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+/**
+ * Main class for mini-google map 
+ * @author xiaofandou
+ *
+ */
 public class Map extends Application
 					 implements MapComponentInitializedListener {
 	
