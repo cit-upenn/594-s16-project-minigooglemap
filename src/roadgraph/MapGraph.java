@@ -1,10 +1,14 @@
 package roadgraph;
 
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import geography.GeographicPoint;
@@ -89,17 +93,90 @@ public class MapGraph {
 		headNode.addEdge(newEdge);
 	}
 	
-	// Note: Every time a vertex is explored, append it to nodeSearched.
+	/**
+	 * Search for shortest route using BFS
+	 * @param start start location
+	 * @param end end location
+	 * @param nodeSearched list of node searched for visualization, add by visit time
+	 * @return the list of node represent the shortest route
+	 */
 	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
-		//TODO: implementation
-		return null;
+		// sanity check
+		if (start == null) {
+			throw new NullPointerException("invalid start point");
+		}
+		if (end == null) {
+			throw new NullPointerException("invalid end point");
+		}
+		MapNode startNode = vertexMap.get(start);
+		MapNode endNode = vertexMap.get(end);
+		if (startNode == null) {
+			throw new NullPointerException("start point beyond map scope");
+		}
+		if (endNode == null) {
+			throw new NullPointerException("end point beyond map scope");
+		}
+		
+		// initialize variables
+		LinkedList<GeographicPoint> path = new LinkedList<>();
+		Map<MapNode, MapNode> prev = new HashMap<>();
+		Queue<MapNode> queue = new ArrayDeque<>();	
+		queue.offer(startNode);
+		MapNode current = null;
+		
+		while (!queue.isEmpty()) {
+			current = queue.poll();
+			nodeSearched.add(current.getLocation()); // for view side to realize visualization
+			if (current.equals(endNode)) {
+				break;
+			}
+			
+			Set<MapNode> neighbors = current.getNeighbors();
+			for (MapNode neighbor : neighbors) {
+				if (!prev.containsKey(neighbor)) {
+					prev.put(neighbor, current);
+					queue.offer(neighbor);
+				}
+			}
+		}
+		
+		// if current map nodes are not connected, may have no path exist
+		if (!current.equals(endNode)) {
+			// may need some action from view side, here simply print to console and return null
+			System.out.println("No available path found in the map from " + start + " to " + end);
+			return null;
+		}
+		
+		// construct the path from end to start
+		path.add(current.getLocation());
+		while (!current.equals(startNode)) {
+			MapNode prevNode = prev.get(current);
+			path.addFirst(prevNode.getLocation());
+			current = prevNode;
+		}
+		
+		return path;
 	}
 	
+	/**
+	 * Search for shortest route using Dijkstra
+	 * @param start start location
+	 * @param end end location
+	 * @param nodeSearched list of node searched for visualization, add by visit time
+	 * @return the list of node represent the shortest route
+	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
 		return null;
 	}
 	
+	/**
+	 * Search for shortest route using A-Star search
+	 * @param start start location
+	 * @param end end location
+	 * @param nodeSearched list of node searched for visualization, add by visit time
+	 * @return the list of node represent the shortest route
+	 */
 	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
 		return null;
