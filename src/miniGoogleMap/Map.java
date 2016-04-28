@@ -35,7 +35,7 @@ import javafx.stage.StageStyle;
  */
 public class Map extends Application
 					 implements MapComponentInitializedListener {
-	
+	//zxczzcxcxz
 	
 	protected GoogleMapView mapComponent;
 	protected GoogleMap map;
