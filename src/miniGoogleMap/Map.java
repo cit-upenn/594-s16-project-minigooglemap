@@ -27,6 +27,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+//import playing.Confirm;
 
 /**
  * Main class for mini-google map 
@@ -120,6 +121,9 @@ public class Map extends Application
 	    TextField fetch = new TextField();
 	    fetch.setPromptText("type \"example.map\"");
 	    Button fetchBUtton = new Button("Fetch Data");
+	    fetchBUtton.setOnAction(e -> {
+	    	feychingStatus();
+	    });
 	    
 	    
 	    /* Add all the layouts to right box, in the order of levels */
@@ -201,6 +205,44 @@ public class Map extends Application
     		
 	    });
     }
+    
+	private void feychingStatus(){
+		boolean answer = secondWindow("Status", "Fectching data...");
+	}
+	
+	private boolean secondWindow(String title, String message){
+		
+		boolean answer = false;
+		Stage window = new Stage();
+		window.initModality(Modality.APPLICATION_MODAL);
+		window.setTitle(title);
+		window.setMinWidth(250);
+		Label label = new Label();
+		label.setText(message);
+		
+//		// create 2 buttons
+//		Button yes = new Button("yes");
+//		Button no = new Button("no!");
+//		
+//		yes.setOnAction(e ->{
+//			answer = true;
+//			window.close();
+//		});
+//		no.setOnAction(e ->{
+//			answer = false;
+//			window.close();
+//		});
+		
+		VBox layout = new VBox(10);
+		layout.getChildren().addAll(label);
+		layout.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(layout);
+		window.setScene(scene);
+		window.showAndWait();
+		
+		return answer;
+
+	}
     
     public static void setCurrPosLabel(GeographicPoint pos) {
     	LabelManager.setLabelText(currPosLabel, "Current Position: (" + pos.getX() + ", " + pos.getY() + ")");
