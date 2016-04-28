@@ -1,4 +1,4 @@
-package miniGoogleMap;
+	package miniGoogleMap;
 
 import geography.GeographicPoint;
 import gmapsfx.GoogleMapView;
@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -39,7 +40,7 @@ public class Map extends Application
 	protected GoogleMapView mapComponent;
 	protected GoogleMap map;
 	protected DataSet ds;
-	
+		
 	/* GUI components */
 	protected Stage primaryStage;
 	//=========level 1===========
@@ -70,6 +71,7 @@ public class Map extends Application
 		
 		/* Right Panel */
 	    VBox right = new VBox();
+	    HBox bottom = new HBox();
 	    
 	    /* box of map file dropdown and load button */
 	    HBox mapFiles = new HBox();
@@ -114,6 +116,11 @@ public class Map extends Application
 	    
 	    currPosBox.getChildren().addAll(currPosLabel);
 	    
+	    /*  datafetching */
+	    TextField fetch = new TextField();
+	    fetch.setPromptText("type \"example.map\"");
+	    Button fetchBUtton = new Button("Fetch Data");
+	    
 	    
 	    /* Add all the layouts to right box, in the order of levels */
 	    Label chooseLabel = new Label("Choose a Map:");
@@ -128,6 +135,9 @@ public class Map extends Application
 		right.setPadding(new Insets(20, 0, 0, 0));
 		right.setPrefWidth(300);
 		
+		/* the bottom pane*/
+		bottom.getChildren().addAll(fetch, fetchBUtton);
+		
 		/* Attach button listeners for all buttons */
 		attachButtonListeners();
 		
@@ -136,6 +146,7 @@ public class Map extends Application
 		Scene scene = new Scene(bp);
         bp.setCenter(mapComponent);
         bp.setRight(right);
+        bp.setBottom(bottom);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Mini-Google Map");
         primaryStage.show();
