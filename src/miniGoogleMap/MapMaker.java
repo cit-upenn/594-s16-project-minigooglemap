@@ -134,7 +134,6 @@ public class MapMaker {
         }
         query += "); (._;>;); out;";
         return query;
-        
     }
     
 }

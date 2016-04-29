@@ -36,11 +36,11 @@ import javafx.stage.StageStyle;
  */
 public class Map extends Application
 					 implements MapComponentInitializedListener {
-	//zxczzcxcxz
 	
 	protected GoogleMapView mapComponent;
 	protected GoogleMap map;
 	protected DataSet ds;
+
 		
 	/* GUI components */
 	protected Stage primaryStage;
@@ -60,6 +60,7 @@ public class Map extends Application
 	
 	//=========level 5===========
 	static Label currPosLabel;
+	
 	
 
 	@Override
@@ -120,9 +121,9 @@ public class Map extends Application
 	    /*  datafetching */
 	    TextField fetch = new TextField();
 	    fetch.setPromptText("type \"example.map\"");
-	    Button fetchBUtton = new Button("Fetch Data");
-	    fetchBUtton.setOnAction(e -> {
-	    	feychingStatus();
+	    Button fetchButton = new Button("Fetch Data");
+	    fetchButton.setOnAction(e -> {
+	    	
 	    });
 	    
 	    
@@ -140,7 +141,7 @@ public class Map extends Application
 		right.setPrefWidth(300);
 		
 		/* the bottom pane*/
-		bottom.getChildren().addAll(fetch, fetchBUtton);
+		bottom.getChildren().addAll(fetch, fetchButton);
 		
 		/* Attach button listeners for all buttons */
 		attachButtonListeners();
@@ -206,31 +207,31 @@ public class Map extends Application
 	    });
     }
     
-	private void feychingStatus(){
-		boolean answer = secondWindow("Status", "Fectching data...");
-	}
+//	private void feychingStatus(){
+//		boolean answer = secondWindow("Status", "Fectching data...");
+//	}
 	
-	private boolean secondWindow(String title, String message){
-		
-		boolean answer = false;
-		Stage window = new Stage();
-		window.initModality(Modality.APPLICATION_MODAL);
-		window.setTitle(title);
-		window.setMinWidth(250);
-		window.setMinHeight(250);
-		Label label = new Label();
-		label.setText(message);
-				
-		VBox layout = new VBox(10);
-		layout.getChildren().addAll(label);
-		layout.setAlignment(Pos.CENTER);
-		Scene scene = new Scene(layout);
-		window.setScene(scene);
-		window.showAndWait();
-		
-		return answer;
-
-	}
+//	private boolean secondWindow(String title, String message){
+//		
+//		boolean answer = false;
+//		Stage window = new Stage();
+//		window.initModality(Modality.APPLICATION_MODAL);
+//		window.setTitle(title);
+//		window.setMinWidth(250);
+//		window.setMinHeight(250);
+//		Label label = new Label();
+//		label.setText(message);
+//				
+//		VBox layout = new VBox(10);
+//		layout.getChildren().addAll(label);
+//		layout.setAlignment(Pos.CENTER);
+//		Scene scene = new Scene(layout);
+//		window.setScene(scene);
+//		window.showAndWait();
+//		
+//		return answer;
+//
+//	}
     
     public static void setCurrPosLabel(GeographicPoint pos) {
     	LabelManager.setLabelText(currPosLabel, "Current Position: (" + pos.getX() + ", " + pos.getY() + ")");
