@@ -140,7 +140,7 @@ public class MapGraph {
 		while (!queue.isEmpty()) {
 			current = queue.poll();
 			nodeSearched.add(current.getLocation()); // for view side to realize visualization
-			
+
 			// exit condition
 			if (current.equals(endNode)) {
 				break;
@@ -192,23 +192,35 @@ public class MapGraph {
 		Map<MapNode, MapNode> prev = new HashMap<>();
 		PriorityQueue<MapNode> queue = new PriorityQueue<>();	
 		queue.offer(startNode);
+		startNode.setShortest(0);
 		MapNode current = null;
-		
+
 		while (!queue.isEmpty()) {
 			current = queue.poll();
+			double curShortest = current.getShortest();
 			nodeSearched.add(current.getLocation()); // for view side to realize visualization
-			
+
 			// exit condition
 			if (current.equals(endNode)) {
 				break;
 			}
-
-			Set<MapNode> neighbors = current.getNeighbors();
-			for (MapNode neighbor : neighbors) {
-				//if (!prev.containsKey(neighbor)) {
+			
+			Set<MapEdge> edges = current.getEdges();
+			for (MapEdge e : edges) {
+				// add to priority queue & prev if first visit the node
+				MapNode neighbor = e.getTail();
+				if (!prev.containsKey(neighbor)) {
 					prev.put(neighbor, current);
 					queue.offer(neighbor);
-				//}
+				}
+				
+				// relax procedure
+				double weight = e.getLength();
+				double neighborShortest = neighbor.getShortest();
+				if (neighborShortest > weight + curShortest) {
+					neighbor.setShortest(weight + curShortest); // update shortest
+					prev.put(neighbor, current); 				// update prev
+				}
 			}
 		}
 
