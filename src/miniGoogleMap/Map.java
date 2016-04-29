@@ -31,7 +31,7 @@ import javafx.stage.StageStyle;
 
 /**
  * Main class for mini-google map 
- * @author xiaofandou
+ * @author xiaofandou,ziyuchen
  *
  */
 public class Map extends Application

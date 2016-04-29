@@ -15,7 +15,10 @@ import gmapsfx.javascript.object.GoogleMap;
 import gmapsfx.javascript.object.LatLong;
 import gmapsfx.javascript.object.LatLongBounds;
 
-
+/**
+ * This class control the fetch button
+ *
+ */
 public class Controller {
 	
 	private GoogleMap map;
