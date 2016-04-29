@@ -93,14 +93,12 @@ public class MapGraph {
 	}
 	
 	/**
-	 * Search for shortest route using BFS
-	 * @param start start location
-	 * @param end end location
-	 * @param nodeSearched list of node searched for visualization, add by visit time
-	 * @return the list of node represent the shortest route
+	 * Extracted the sanity check for the shortest path search methods
+	 * @param start the start point
+	 * @param end the end point
+	 * @return the checked and valid MapNode of start and end point
 	 */
-	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
-		// sanity check
+	private MapNode[] sanityCheck(GeographicPoint start, GeographicPoint end) {
 		if (start == null) {
 			throw new NullPointerException("invalid start point");
 		}
@@ -115,6 +113,21 @@ public class MapGraph {
 		if (endNode == null) {
 			throw new NullPointerException("end point beyond map scope");
 		}
+		return new MapNode[]{startNode, endNode};
+	}
+	
+	/**
+	 * Search for shortest route using BFS
+	 * @param start start location
+	 * @param end end location
+	 * @param nodeSearched list of node searched for visualization, add by visit time
+	 * @return the list of node represent the shortest route
+	 */
+	public List<GeographicPoint> bfs(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
+		// sanity check
+		MapNode[] checked = sanityCheck(start, end);
+		MapNode startNode = checked[0];
+		MapNode endNode = checked[1];
 		
 		// initialize variables
 		LinkedList<GeographicPoint> path = new LinkedList<>();
