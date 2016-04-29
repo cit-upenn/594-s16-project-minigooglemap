@@ -19,7 +19,7 @@ public class MapEdge {
 	 * @param roadType type of the road provided by API
 	 * @param head head of the directed edge
 	 * @param tail tail of the directed edge
-	 * @param length length od the edge
+	 * @param length length of the edge
 	 */
 	public MapEdge(MapNode head, MapNode tail, String roadName, String roadType, double length) {
 		this.roadName = roadName;

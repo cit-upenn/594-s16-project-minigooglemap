@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
@@ -20,10 +21,10 @@ import geography.GeographicPoint;
  *
  */
 public class MapGraph {
-	
+
 	private Map<GeographicPoint, MapNode> vertexMap;
 	private Set<MapEdge> edges;
-	
+
 	/**
 	 * Constructor of the class, initialize the fields
 	 */
@@ -31,7 +32,7 @@ public class MapGraph {
 		vertexMap = new HashMap<>();
 		edges = new HashSet<>();
 	}
-	
+
 	/**
 	 * Get the current size in terms of the node counts
 	 * @return the node counts in the graph
@@ -39,7 +40,7 @@ public class MapGraph {
 	public int getNumVertices() {
 		return vertexMap.size();
 	}
-	
+
 	/**
 	 * Get the current size of the graph in terms of the edges counts
 	 * @return the edges count in the graph
@@ -47,7 +48,7 @@ public class MapGraph {
 	public int getNumEdges() {
 		return edges.size();
 	}
-	
+
 	/**
 	 * Get all the vertices in the map
 	 * @return the set view of all vertices in the graph
@@ -55,7 +56,7 @@ public class MapGraph {
 	public Set<GeographicPoint> getVertices() {
 		return vertexMap.keySet();
 	}
-	
+
 	/**
 	 * Add vertex to this graph
 	 * @param point the point to add
@@ -69,7 +70,7 @@ public class MapGraph {
 			vertexMap.put(point, node);
 		}
 	}
-	
+
 	/**
 	 * Add edge to this graph
 	 * @param head the head of the directed edge
@@ -91,7 +92,7 @@ public class MapGraph {
 		edges.add(newEdge);
 		headNode.addEdge(newEdge);
 	}
-	
+
 	/**
 	 * Extracted the sanity check for the shortest path search methods
 	 * @param start the start point
@@ -115,7 +116,7 @@ public class MapGraph {
 		}
 		return new MapNode[]{startNode, endNode};
 	}
-	
+
 	/**
 	 * Search for shortest route using BFS
 	 * @param start start location
@@ -128,21 +129,23 @@ public class MapGraph {
 		MapNode[] checked = sanityCheck(start, end);
 		MapNode startNode = checked[0];
 		MapNode endNode = checked[1];
-		
+
 		// initialize variables
 		LinkedList<GeographicPoint> path = new LinkedList<>();
-		Map<MapNode, MapNode> prev = new HashMap<>();
+		Map<MapNode, MapNode> prev = new HashMap<>(); // also acts as visited
 		Queue<MapNode> queue = new ArrayDeque<>();	
 		queue.offer(startNode);
 		MapNode current = null;
-		
+
 		while (!queue.isEmpty()) {
 			current = queue.poll();
 			nodeSearched.add(current.getLocation()); // for view side to realize visualization
+			
+			// exit condition
 			if (current.equals(endNode)) {
 				break;
 			}
-			
+
 			Set<MapNode> neighbors = current.getNeighbors();
 			for (MapNode neighbor : neighbors) {
 				if (!prev.containsKey(neighbor)) {
@@ -151,14 +154,14 @@ public class MapGraph {
 				}
 			}
 		}
-		
+
 		// if current map nodes are not connected, may have no path exist
 		if (!current.equals(endNode)) {
 			// may need some action from view side, here simply print to console and return null
 			System.out.println("No available path found in the map from " + start + " to " + end);
 			return null;
 		}
-		
+
 		// construct the path from end to start
 		path.add(current.getLocation());
 		while (!current.equals(startNode)) {
@@ -166,10 +169,10 @@ public class MapGraph {
 			path.addFirst(prevNode.getLocation());
 			current = prevNode;
 		}
-		
+
 		return path;
 	}
-	
+
 	/**
 	 * Search for shortest route using Dijkstra
 	 * @param start start location
@@ -179,9 +182,39 @@ public class MapGraph {
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
 		//TODO: implementation
+		// sanity check
+		MapNode[] checked = sanityCheck(start, end);
+		MapNode startNode = checked[0];
+		MapNode endNode = checked[1];
+
+		// initialize variables
+		LinkedList<GeographicPoint> path = new LinkedList<>();
+		Map<MapNode, MapNode> prev = new HashMap<>();
+		PriorityQueue<MapNode> queue = new PriorityQueue<>();	
+		queue.offer(startNode);
+		MapNode current = null;
+		
+		while (!queue.isEmpty()) {
+			current = queue.poll();
+			nodeSearched.add(current.getLocation()); // for view side to realize visualization
+			
+			// exit condition
+			if (current.equals(endNode)) {
+				break;
+			}
+
+			Set<MapNode> neighbors = current.getNeighbors();
+			for (MapNode neighbor : neighbors) {
+				//if (!prev.containsKey(neighbor)) {
+					prev.put(neighbor, current);
+					queue.offer(neighbor);
+				//}
+			}
+		}
+
 		return null;
 	}
-	
+
 	/**
 	 * Search for shortest route using A-Star search
 	 * @param start start location
