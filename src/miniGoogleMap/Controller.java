@@ -21,21 +21,19 @@ public class Controller {
 	private GoogleMap map;
 	
     private Button fetchButton;
-    private TextField fetchText;
+    private String fName;
     
     private static String PATTERN = "[\\w_]+.map";
     private static String DIR = "data/maps/";
     
-    public Controller(Button fetchButton){
-    	this.fetchButton = fetchButton;
+    public Controller(String fName){
+    	this.fName = fName;
     }
 	
     /**
      * Registers event to Fetch Data
      */
-    private void setFetchButton() {
-    	fetchButton.setOnAction(e -> {
-    		String fName = fetchText.getText();		
+    void setFetchButton() {
     		// check for valid file name: example.map
     		if((checkFileName(fName)) != null) {
     			if (!checkBoundsSize(.1)) {
@@ -69,7 +67,6 @@ public class Controller {
 
     			alert.showAndWait();
     		}
-    	});
     }
     
     

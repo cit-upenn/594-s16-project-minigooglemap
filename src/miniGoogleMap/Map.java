@@ -1,4 +1,4 @@
-	package miniGoogleMap;
+package miniGoogleMap;
 
 import geography.GeographicPoint;
 import gmapsfx.GoogleMapView;
@@ -123,7 +123,9 @@ public class Map extends Application
 	    fetch.setPromptText("type \"example.map\"");
 	    Button fetchButton = new Button("Fetch Data");
 	    fetchButton.setOnAction(e -> {
-	    	
+	    	String fName = fetch.getText();
+	    	Controller ctr = new Controller(fName);
+	    	ctr.setFetchButton();
 	    });
 	    
 	    
