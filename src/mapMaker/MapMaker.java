@@ -70,21 +70,6 @@ public class MapMaker {
     }
 
     public static void main(String[] args) {
-//        if (args.length != 4) {
-//            System.out.println("Incorrect number of arguments.");
-//            System.out.println(args.length);
-//            return;
-//        }
-//
-//        float[] bound_arr = new float[4];
-//        try {
-//            for (int i = 0; i < args.length; i++) {
-//                bound_arr[i] = Float.parseFloat(args[i]);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return;
-//        }
     	
     	float[] bound_arr = {(float) 50.6,(float) 7.0,(float) 50.8,(float) 7.3};
         MapMaker map = new MapMaker(bound_arr);

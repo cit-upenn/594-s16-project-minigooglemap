@@ -66,8 +66,4 @@ public class DataFetcher {
         return q;
     }
     
-//    public static void main(String[] args) {
-//    	DataFetcher df = new DataFetcher(new float[]{(float) 50.6,(float) 7.0,(float) 50.8,(float) 7.3});
-//    	System.out.println(df.constructQuery(new float[]{(float) 50.6,(float) 7.0,(float) 50.8,(float) 7.3}));
-//    }
 }
