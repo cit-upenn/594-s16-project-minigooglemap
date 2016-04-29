@@ -126,6 +126,7 @@ public class MapGraph {
 	 * @return the path in list
 	 */
 	private List<GeographicPoint> generatePath(MapNode current, MapNode startNode, MapNode endNode, Map<MapNode, MapNode> prev) {
+		// initialize path
 		LinkedList<GeographicPoint> path = new LinkedList<>();
 		
 		// if current map nodes are not connected, may have no path exist
@@ -200,7 +201,6 @@ public class MapGraph {
 		MapNode endNode = checked[1];
 
 		// initialize variables
-		LinkedList<GeographicPoint> path = new LinkedList<>();
 		Map<MapNode, MapNode> prev = new HashMap<>();
 		PriorityQueue<MapNode> queue = new PriorityQueue<>();	
 		queue.offer(startNode);
