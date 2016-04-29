@@ -118,6 +118,35 @@ public class MapGraph {
 	}
 
 	/**
+	 * Helper function to generate path
+	 * @param current the current MapNode
+	 * @param startNode the start MapNode
+	 * @param endNode the end MapNode
+	 * @param prev the prev mapping
+	 * @return the path in list
+	 */
+	private List<GeographicPoint> generatePath(MapNode current, MapNode startNode, MapNode endNode, Map<MapNode, MapNode> prev) {
+		LinkedList<GeographicPoint> path = new LinkedList<>();
+		
+		// if current map nodes are not connected, may have no path exist
+		if (!current.equals(endNode)) {
+			// may need some action from view side, here simply print to console and return null
+			System.out.println("No available path found in the map from " + startNode.getLocation() + " to " + endNode.getLocation());
+			return null;
+		}
+
+		// construct the path from end to start
+		path.add(current.getLocation());
+		while (!current.equals(startNode)) {
+			MapNode prevNode = prev.get(current);
+			path.addFirst(prevNode.getLocation());
+			current = prevNode;
+		}
+
+		return path;
+	}
+	
+	/**
 	 * Search for shortest route using BFS
 	 * @param start start location
 	 * @param end end location
@@ -131,7 +160,6 @@ public class MapGraph {
 		MapNode endNode = checked[1];
 
 		// initialize variables
-		LinkedList<GeographicPoint> path = new LinkedList<>();
 		Map<MapNode, MapNode> prev = new HashMap<>(); // also acts as visited
 		Queue<MapNode> queue = new ArrayDeque<>();	
 		queue.offer(startNode);
@@ -155,22 +183,7 @@ public class MapGraph {
 			}
 		}
 
-		// if current map nodes are not connected, may have no path exist
-		if (!current.equals(endNode)) {
-			// may need some action from view side, here simply print to console and return null
-			System.out.println("No available path found in the map from " + start + " to " + end);
-			return null;
-		}
-
-		// construct the path from end to start
-		path.add(current.getLocation());
-		while (!current.equals(startNode)) {
-			MapNode prevNode = prev.get(current);
-			path.addFirst(prevNode.getLocation());
-			current = prevNode;
-		}
-
-		return path;
+		return generatePath(current, startNode, endNode, prev);
 	}
 
 	/**
@@ -181,7 +194,6 @@ public class MapGraph {
 	 * @return the list of node represent the shortest route
 	 */
 	public List<GeographicPoint> dijkstra(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
-		//TODO: implementation
 		// sanity check
 		MapNode[] checked = sanityCheck(start, end);
 		MapNode startNode = checked[0];
@@ -224,22 +236,7 @@ public class MapGraph {
 			}
 		}
 
-		// if current map nodes are not connected, may have no path exist
-		if (!current.equals(endNode)) {
-			// may need some action from view side, here simply print to console and return null
-			System.out.println("No available path found in the map from " + start + " to " + end);
-			return null;
-		}
-
-		// construct the path from end to start
-		path.add(current.getLocation());
-		while (!current.equals(startNode)) {
-			MapNode prevNode = prev.get(current);
-			path.addFirst(prevNode.getLocation());
-			current = prevNode;
-		}
-
-		return path;
+		return generatePath(current, startNode, endNode, prev);
 	}
 
 	/**
