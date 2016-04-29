@@ -217,22 +217,10 @@ public class Map extends Application
 		window.initModality(Modality.APPLICATION_MODAL);
 		window.setTitle(title);
 		window.setMinWidth(250);
+		window.setMinHeight(250);
 		Label label = new Label();
 		label.setText(message);
-		
-//		// create 2 buttons
-//		Button yes = new Button("yes");
-//		Button no = new Button("no!");
-//		
-//		yes.setOnAction(e ->{
-//			answer = true;
-//			window.close();
-//		});
-//		no.setOnAction(e ->{
-//			answer = false;
-//			window.close();
-//		});
-		
+				
 		VBox layout = new VBox(10);
 		layout.getChildren().addAll(label);
 		layout.setAlignment(Pos.CENTER);
