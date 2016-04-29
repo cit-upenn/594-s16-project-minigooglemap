@@ -196,15 +196,15 @@ public class MapGraph {
 		MapNode current = null;
 
 		while (!queue.isEmpty()) {
-			current = queue.poll();
+			current = queue.poll(); 				  // minimum in terms of shortest in the current queue
 			double curShortest = current.getShortest();
-			nodeSearched.add(current.getLocation()); // for view side to realize visualization
+			nodeSearched.add(current.getLocation());  // for view side to realize visualization
 
 			// exit condition
 			if (current.equals(endNode)) {
 				break;
 			}
-			
+
 			Set<MapEdge> edges = current.getEdges();
 			for (MapEdge e : edges) {
 				// add to priority queue & prev if first visit the node
@@ -213,7 +213,7 @@ public class MapGraph {
 					prev.put(neighbor, current);
 					queue.offer(neighbor);
 				}
-				
+
 				// relax procedure
 				double weight = e.getLength();
 				double neighborShortest = neighbor.getShortest();
@@ -224,7 +224,22 @@ public class MapGraph {
 			}
 		}
 
-		return null;
+		// if current map nodes are not connected, may have no path exist
+		if (!current.equals(endNode)) {
+			// may need some action from view side, here simply print to console and return null
+			System.out.println("No available path found in the map from " + start + " to " + end);
+			return null;
+		}
+
+		// construct the path from end to start
+		path.add(current.getLocation());
+		while (!current.equals(startNode)) {
+			MapNode prevNode = prev.get(current);
+			path.addFirst(prevNode.getLocation());
+			current = prevNode;
+		}
+
+		return path;
 	}
 
 	/**
