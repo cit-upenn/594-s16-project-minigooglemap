@@ -44,13 +44,13 @@ public class MapLoader implements GraphLoader  {
 			// add edges to nodes
 			for (GeographicPoint pt : intersections) {
 				// Track the node to its next node, building up the points 
-				List<LinkedList<Road>> inAndOut = map.get(pt);
-				LinkedList<Road> outgoing = inAndOut.get(0);
-				for (Road info : outgoing) {
+				List<LinkedList<Road>> all = map.get(pt);
+				LinkedList<Road> outgoing = all.get(0);
+				for (Road r : outgoing) {
 					HashSet<GeographicPoint> used = new HashSet<GeographicPoint>();
 					used.add(pt);
 				
-					List<GeographicPoint> pointsOnEdge = findPointsOnEdge(map, info, intersections);
+					List<GeographicPoint> pointsOnEdge = findPointsOnEdge(map, r, intersections);
 					GeographicPoint end = pointsOnEdge.remove(pointsOnEdge.size()-1);
 					writer.write(pt + " " + end + "\n");
 				}
