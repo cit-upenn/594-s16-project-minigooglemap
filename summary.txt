@@ -5,6 +5,9 @@ Group Members:
  - Xiaofan Dou (xiaofand@seas.upenn.edu) 
  - Qiannan Ling (qiannanl@seas.upenn.edu)
 
+Project GitHub link:
+https://github.com/cit-upenn/594-s16-project-minigooglemap
+
 Project Description:
 1. Idea Description:
 We designed and built an Mini-Google Map java app by integrated with Google Map JavaFx API. GMaps JavaFx API is a wrapper for Google Map JavaScript API, allowing users to interact with Google Map using pure Java API instead of through a Google-provided JavaScript API. Similar to Google Map, a google map viewer would be embedded into the app frame. 
