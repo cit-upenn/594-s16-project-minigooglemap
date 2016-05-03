@@ -3,7 +3,7 @@ package util;
 import geography.GeographicPoint;
 
 //A class to store information about the lines in the road files.
-class RoadLineInfo {
+class Road {
 	GeographicPoint point1, point2;
 	String roadName, roadType;
 	
@@ -14,7 +14,7 @@ class RoadLineInfo {
 	 * @param roadName name of the road
 	 * @param roadType type of the road
 	 */
-	public RoadLineInfo(GeographicPoint p1, GeographicPoint p2, String roadName, String roadType) 
+	public Road(GeographicPoint p1, GeographicPoint p2, String roadName, String roadType) 
 	{
 		this.point1 = p1;
 		this.point2 = p2;
@@ -30,10 +30,10 @@ class RoadLineInfo {
 		if (o == null) {
 			return false;
 		}
-		if (!(o instanceof RoadLineInfo)) {
+		if (!(o instanceof Road)) {
 			return false;
 		}
-		RoadLineInfo info = (RoadLineInfo)o;
+		Road info = (Road)o;
 		return info.point1.equals(this.point1) && info.point2.equals(this.point2)  &&
 				info.roadType.equals(this.roadType) && info.roadName.equals(this.roadName);
 	}
@@ -47,9 +47,9 @@ class RoadLineInfo {
 	}
 	
 	/** Return a reversed road */
-	public RoadLineInfo getReverseCopy()
+	public Road getReverseCopy()
 	{	
-		RoadLineInfo reverse = new RoadLineInfo(this.point2, this.point1, this.roadName, this.roadType);
+		Road reverse = new Road(this.point2, this.point1, this.roadName, this.roadType);
 		return reverse;
 	}
 	
@@ -66,20 +66,18 @@ class RoadLineInfo {
 	 * @param roadInfo The RoadLineInfo to be checked.
 	 * @return true/false based on whether they are in the same road or not.
 	 */
-	public boolean sameRoad(RoadLineInfo roadInfo){
+	public boolean sameRoad(Road roadInfo){
 		return roadInfo.roadName.equals(this.roadName) && roadInfo.roadType.equals(this.roadType);
 	}
 	
 
-	public boolean isReverse(RoadLineInfo other)
-	{
+	public boolean isReverse(Road other) {
 		return this.point1.equals(other.point2) && this.point2.equals(other.point1) &&
 				this.roadName.equals(other.roadName) && this.roadType.equals(other.roadType);
 	}
 	
-	/* toString */
-	public String toString()
-	{
+	/* print stuff */
+	public String print() {
 		return this.point1 + " " + this.point2 + " " + this.roadName + " " + this.roadType;
 		
 	}
