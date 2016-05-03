@@ -45,12 +45,7 @@ The Java application will have two main functionalities:
  - Qiannan Ling: Road Graph model implementation (roadgraph package), Search algorithm implementation.
 
 4. Clarification:
-	(1) We use GMaps JavaFx API and Overpass API as following:
-      Fetch the Geolocations from Google Map Viewer and then make Overpass API function calls, and then model the graph and store it locally in some self-defined files.(Users can choose which local file to load into the viewer)
+	(1) We plan to use GMaps JavaFx API as following:
+      Fetch the Geolocations from Google Map Viewer by making API function calls, and then model the graph and store locally in some self-defined files.(Users can choose which local file to load into the viewer)
 	(2) We plan to calculate the shortest path locally and then display it on viewer. 
       (Note: we are not asking the google map side to do the calculation for us, we just use the API to get the geoinformation of the location points and the Google Map style map view).
-
- 
-		
-
-
