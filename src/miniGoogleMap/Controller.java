@@ -1,116 +1,286 @@
 package miniGoogleMap;
 
-import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.regex.Pattern;
 
-import gmapsfx.GoogleMapView;
+import geography.GeographicPoint;
+import gmapsfx.javascript.IJavascriptRuntime;
+import gmapsfx.javascript.JavascriptArray;
+import gmapsfx.javascript.JavascriptRuntime;
 import gmapsfx.javascript.object.GoogleMap;
 import gmapsfx.javascript.object.LatLong;
-import gmapsfx.javascript.object.LatLongBounds;
+import gmapsfx.javascript.object.Marker;
+import gmapsfx.javascript.object.MarkerOptions;
+import gmapsfx.shapes.Polyline;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 
 /**
- * This class control the fetch button
+ * the controller for the app.
+ * @author xiaofandou
  *
  */
 public class Controller {
 	
 	private GoogleMap map;
+	private DataSet ds;
 	
-    private Button fetchButton;
-    private String fName;
-    
-    private static String PATTERN = "[\\w_]+.map";
-    private static String DIR = "data/maps/";
-    
-    public Controller(String fName){
-    	this.fName = fName;
-    }
 	
-    /**
-     * Registers event to Fetch Data
-     */
-    void setFetchButton() {
-    		// check for valid file name: example.map
-    		if((checkFileName(fName)) != null) {
-    			if (!checkBoundsSize(.1)) {
-    				Alert alert = new Alert(AlertType.ERROR);
-        			alert.setTitle("Size Error");
-        			alert.setHeaderText("Map Size Error");
-        			alert.setContentText("Map boundaries are too large.");
-        			alert.showAndWait();
-    			} else if (!checkBoundsSize(0.02)) {
-                	Alert warning = new Alert(AlertType.CONFIRMATION);
-                	warning.setTitle("Size Warning");
-                	warning.setHeaderText("Map Size Warning");
-                	warning.setContentText("Your map file may take a long time to download,\nand your computer may crash when you try to\nload the intersections. Continue?");
-                	warning.showAndWait().ifPresent(response -> {
-                		if (response == ButtonType.OK) {
-                			fetch();
-                		}
-                	});
-                } else {
-                	fetch();
-                }
-
+	//=========level 1===========
+	private ChoiceBox<String> choiceBox;
+	private Button loadButton;
+	//=========level 2===========
+	private Label mapLabel;
+	
+	//=========level 3===========
+	private Label startLabel;
+	
+	
+	//=========level 4===========
+	private Label destLabel;
+	
+	
+	//=========level 5===========
+	private static Label currPosLabel;
+	
+	//=========level 6===========
+	private Button startButton;
+	private Button destButton;
+	
+	//=========level 7===========
+	private ChoiceBox<String> alg;
+	
+	//=========level 8===========
+	private Button path;
+	private Button visualize;
+	private Button reset;
+	
+	private JavascriptArray jsArray;
+	
+	/**
+	 * constructor 
+	 * @param map
+	 * @param ds
+	 * @param choiceBox
+	 * @param alg
+	 * @param loadButton
+	 * @param startButton
+	 * @param destButton
+	 * @param path
+	 * @param visualize
+	 * @param reset
+	 * @param mapLabel
+	 * @param startLabel
+	 * @param destLabel
+	 * @param currPosLabel
+	 * @param jsArray
+	 */
+	public Controller(
+			GoogleMap map, DataSet ds,
+			ChoiceBox<String> choiceBox, ChoiceBox<String> alg,
+			Button loadButton, Button startButton, Button destButton,
+			Button path, Button visualize, Button reset, 
+			Label mapLabel, Label startLabel, Label destLabel, Label currPosLabel,
+			JavascriptArray jsArray) 
+	{
+		this.map = map;
+		this.ds = ds;
+		this.choiceBox = choiceBox;
+		this.alg = alg;
+		this.loadButton = loadButton;
+		this.startButton = startButton;
+		this.destButton = destButton;
+		this.path = path;
+		this.visualize = visualize;
+		this.reset = reset;
+		this.mapLabel = mapLabel;
+		this.startLabel = startLabel;
+		this.destLabel = destLabel;
+		this.currPosLabel = currPosLabel;
+		this.jsArray = jsArray;
+		
+		setUpComponents();
+	}
+	
+	
+	
+	// set up all the components.
+	private void setUpComponents() {
+		loadButton.setOnAction(e -> {
+			
+			if(ds != null) {
+				ds.reset();
+			}
+			
+    		/* load the map */
+    		if(choiceBox.getValue() == null) {
+    			AlertBox.display("Warning!", "No map selected!");
+    			return;
     		}
-    		else {
-    		    Alert alert = new Alert(AlertType.ERROR);
-    			alert.setTitle("Filename Error");
-    			alert.setHeaderText("Input Error");
-    			alert.setContentText("Check filename input. \n\n\n"
-    								 + "Filename must match format : [filename].map."
-    								 + "\n\nUse only uppercase and lowercase letters,\nnumbers, and underscores in [filename].");
-
-    			alert.showAndWait();
+    		
+    		String fileName = choiceBox.getValue();
+    		if(ds != null && fileName.equals(ds.getFileName())) {
+    			AlertBox.display("Warning!", "The map has been loaded!");
+    			return;
     		}
-    }
-    
-    
-    public String checkFileName(String filename) {
-    	if(Pattern.matches(PATTERN, filename)) {
-            return DIR + filename;
-    	}
-    	return null;
-    }
-    
-    // gets current bounds of map view
-    public float[] getBoundsArray() {
+    		
+	    	System.out.println("Ready to load map file: " + fileName);
+	    	ds = new DataSet(fileName, map);
+	    	ds.initializeGraph();
+	    	System.out.println("Map loaded successfully! ");
+	    	
+	    	/* set map label */
+	    	mapLabel.setText("Current Map: " + fileName);
+	    	
+	    	/* Enable other buttons */
+	    	startButton.setDisable(false);
+	    	destButton.setDisable(false);
+	    });
     	
-        LatLong sw, ne;
-    	LatLongBounds bounds = map.getBounds();
+    	startButton.setOnAction(e -> {
+    		System.out.println("Start button pressed!");
+    		
+    		/* check if any point selected */
+    		if(ds.currPos() == null) {
+    			AlertBox.display("Warning", "No point selected!");
+    			return;
+    		}
+    		
+    		/* set currPos to be starting point */
+    		ds.setStart();
+    		
+    		/* set start label */
+    		LabelManager.setLabelText(startLabel, "Starting Point: " + ds.startPoint());
+    		
+    		/* set show path */
+    		if(ds != null && ds.dest() != null) {
+    			path.setDisable(false);
+    		}
+    		
+    	});
     	
-    	sw = bounds.getSouthWest();
-    	ne = bounds.getNorthEast();
+    	destButton.setOnAction(e -> {
+    		System.out.println("Dest button pressed!");
+    		
+    		/* check if any point selected */
+    		if(ds.currPos() == null) {
+    			AlertBox.display("Warning", "No point selected!");
+    			return;
+    		}
+    		
+    		/* set currPos to be destination */
+    		ds.setDest();
+    		
+    		/* set dest label */
+    		LabelManager.setLabelText(destLabel, "Destination: " + ds.dest());
+    		
+    		/* set show path */
+    		if(ds != null && ds.startPoint() != null) {
+    			path.setDisable(false);
+    		}
+    	});
     	
-    	float[] boundsArr = {(float) sw.getLatitude(),(float) sw.getLongitude(),
-    			(float) ne.getLatitude(),(float) ne.getLongitude()}; // south, west, north, east
     	
-    	return boundsArr;
-    }
-    
-    public float boundsSize() {
-    	float[] boundsArr = getBoundsArray();
-    	return (boundsArr[2] - boundsArr[0]) * (boundsArr[3] - boundsArr[1]);
-    }
-    
-    public boolean checkBoundsSize(double limit) {
-    	if (boundsSize() > limit) {
-    		return false;
-    	}
-    	return true;
-    }
-    
-    
-    public void fetch() {
-    	// TO-DO
-    }
-    
-    
+    	path.setOnAction(e -> {
+    		System.out.println("Path is pressed!");
+    		
+    		ds.closeInfoWindow();
+    		
+    		String algorithm = alg.getValue();
+    		List<GeographicPoint> exploredNodes = new ArrayList<>();
+    		List<GeographicPoint> partialPath = null;
+    		
+    		if("BFS".equals(algorithm)) {
+    			partialPath = ds.map().bfs(ds.startPoint(), ds.dest(), exploredNodes);
+    		} else if("Dijkstra".equals(algorithm)) {
+    			partialPath = ds.map().dijkstra(ds.startPoint(), ds.dest(), exploredNodes);
+    		} else if("A Star".equals(algorithm)) {
+    			partialPath = ds.map().aStarSearch(ds.startPoint(), ds.dest(), exploredNodes);
+    		} else {
+    			System.out.println("This is not gonna be!");
+    		}
+    		
+    		if(partialPath == null) {
+    			AlertBox.display("Warning", "No path found!");
+    			return;
+    		}
+    		
+    		ds.setPath(partialPath);
+    		
+    		ds.setExploredNodes(exploredNodes);
+    		
+    		Polyline route = ds.path();
+    		
+    		map.addMapShape(route);
+    		map.fitBounds(ds.getBound("pathBound"));
+    		
+    		visualize.setDisable(false);
+    		
+    		ds.setUnselectedMarkers(false);
+    	});
+    	
+    	visualize.setOnAction(e -> {
+    		/* visualization */
+    		ds.setUnselectedMarkers(false);
+    		map.fitBounds(ds.getBound("visualBound"));
+    		jsArray = new JavascriptArray();
+    		for(int i = 0; i < ds.exploredNodes().size(); i++) {
+    			
+    			LatLong ll = ds.exploredNodes().get(i);
+
+        		Marker newMarker = new Marker(new MarkerOptions()
+        										.animation(null)
+        										.icon(DataSet.markerURL)
+        										.position(ll)
+        										.title(null)
+        										.visible(true));
+        		
+        		jsArray.push(newMarker);
+        		
+    		}
+    		IJavascriptRuntime runtime = JavascriptRuntime.getInstance();
+    		String command = runtime.getFunction("visualizeSearch", map, jsArray);
+    		runtime.execute(command);
+
+    		
+    	});
+    	
+    	
+    	
+    	reset.setOnAction(e -> {
+    		if(ds != null) {
+    			ds.reset();
+    		}
+	    	
+    		if(jsArray != null) {
+    			for(int i = 0; i < jsArray.length(); i++) {
+        			((Marker)jsArray.get(i)).setVisible(false);
+        			map.removeMarker((Marker)jsArray.get(i));
+        		}
+    		}
+    		
+    		
+    		String fileName = choiceBox.getValue();
+    		ds = new DataSet(fileName, map);
+	    	ds.initializeGraph();
+	    	System.out.println("Map loaded successfully! ");
+	    	
+	    	/* set map label */
+	    	mapLabel.setText("Current Map: " + fileName);
+	    	startLabel.setText("Starting Point: No point selected");
+	    	destLabel.setText("Destination: No point selected");
+	    	
+	    	/* Enable other buttons */
+	    	startButton.setDisable(false);
+	    	destButton.setDisable(false);
+    		
+    		
+	    	/* disable other buttons */
+	    	path.setDisable(true);
+	    	visualize.setDisable(true);
+    	});
+	}
 }
+
