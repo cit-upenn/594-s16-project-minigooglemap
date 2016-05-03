@@ -66,7 +66,11 @@ public class MapLoader implements GraphLoader  {
 	
 
 	
-	// parse the line
+	/**
+	 * parse the line read in from the .map file
+	 * @param line
+	 * @return a new road object
+	 */
 	private Road parse(String line) {	
 	        
     	String pattern = "([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s\")(.*)(\"\\s)(.*)";
@@ -156,6 +160,16 @@ public class MapLoader implements GraphLoader  {
 		return map;
 	}
 	
+	/**
+	 * get the intersections set directly from .map file
+	 * @param filename
+	 * @return
+	 */
+	private HashSet<GeographicPoint> getIntersectionFromFile (String filename){
+		 HashMap<GeographicPoint,List<LinkedList<Road>>> map = buildMap(filename);
+		 HashSet<GeographicPoint> intersections = getIntersections(map);
+		 return intersections;
+	}
 	
 	
 	/**
@@ -239,36 +253,37 @@ public class MapLoader implements GraphLoader  {
 
 	
 	@Override
-	public void loadRoadMap(String filename, roadgraph.MapGraph map, 
+	public void loadRoadMap(String filename, roadgraph.MapGraph mapGraph, 
 			HashMap<GeographicPoint,HashSet<RoadSegment>> segments, 
 			Set<GeographicPoint> intersectionsToLoad) {
 
-        HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap = 
-        		buildMap(filename);
-		
-        // Add the nodes to the graph
+        HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap = buildMap(filename);
         HashSet<GeographicPoint> intersections = getIntersections(pointMap);
+        
 		for (GeographicPoint pt : intersections) {
-			map.addVertex(pt);
+			mapGraph.addVertex(pt);
 			if (intersectionsToLoad != null) {
 				intersectionsToLoad.add(pt);
 			}
-			intersections.add(pt);
+
 		}
 
-		addEdgesAndSegments(intersections, pointMap, map, segments);
+		addEdges(intersections, pointMap, mapGraph, segments);
 	}
 
-	
-	// Once you have built the pointMap and added the Nodes, 
-	// add the edges and build the road segments if the segments
-	// map is not null.
-	private static void addEdgesAndSegments(Collection<GeographicPoint> nodes, 
+
+	/**
+	 * all the edges to the map
+	 * @param nodes
+	 * @param pointMap
+	 * @param map
+	 * @param segments
+	 */
+	private static void addEdges(Collection<GeographicPoint> nodes, 
 			HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap, MapGraph map, 
 			HashMap<GeographicPoint,HashSet<RoadSegment>> segments) {
 	
 		// Now we need to add the edges
-		// This is the tricky part
 		for (GeographicPoint pt : nodes) {
 			// Trace the node to its next node, building up the points 
 			// on the edge as you go.
@@ -308,8 +323,14 @@ public class MapLoader implements GraphLoader  {
 	}
 			
 	
-	// Calculate the length of this road segment taking into account all of the 
-	// intermediate geographic points.
+	/**
+	 * Calculate the length of the road segment
+	 * using all the intermediate geographic points
+	 * @param start
+	 * @param end
+	 * @param path
+	 * @return
+	 */
 	private static double getRoadLength(GeographicPoint start, GeographicPoint end,
 			List<GeographicPoint> path)
 	{
@@ -323,7 +344,13 @@ public class MapLoader implements GraphLoader  {
 		return dist;
 	}
 	
-	
+	/**
+	 * find the point on the edge
+	 * @param pointMap
+	 * @param info
+	 * @param nodes
+	 * @return
+	 */
 	private static List<GeographicPoint> findPointsOnEdge(HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
 		Road info, Collection<GeographicPoint> nodes)  {
 		List<GeographicPoint> toReturn = new LinkedList<GeographicPoint>();

@@ -2,7 +2,10 @@ package util;
 
 import geography.GeographicPoint;
 
-//A class to store information about the lines in the road files.
+/**
+ * This class will store the information about a road
+ * including 2 end points, name and its type
+ */
 class Road {
 	GeographicPoint point1, point2;
 	String roadName, roadType;
@@ -70,11 +73,19 @@ class Road {
 		return roadInfo.roadName.equals(this.roadName) && roadInfo.roadType.equals(this.roadType);
 	}
 	
+	/**
+	 * check if they are the same road using only road name
+	 * @param roadInfo
+	 * @return
+	 */
 	public boolean sameName(Road roadInfo){
 		return roadInfo.roadName.equals(this.roadName);
 	}
 	
-
+	/**
+	 * @param other
+	 * @return true if 2 roads are the reverse of each other
+	 */
 	public boolean isReverse(Road other) {
 		return this.point1.equals(other.point2) && this.point2.equals(other.point1) &&
 				this.roadName.equals(other.roadName) && this.roadType.equals(other.roadType);
