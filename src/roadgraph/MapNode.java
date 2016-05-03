@@ -13,9 +13,8 @@ import java.util.Set;
 public class MapNode implements Comparable<MapNode>{
 	private Set<MapEdge> edges;
 	private GeographicPoint location;
-//	private double distance;
-//	private double actualDistance;
 	private double shortest;
+	private double heuristic;
 	
 	/**
 	 * Constructor of the class
@@ -25,8 +24,7 @@ public class MapNode implements Comparable<MapNode>{
 		this.location = location;
 		edges = new HashSet<MapEdge>();
 		shortest = Double.MAX_VALUE;
-//		distance = 0.0;
-//		actualDistance = 0.0;
+		heuristic = 0.0;
 	}
 	
 	
@@ -54,37 +52,21 @@ public class MapNode implements Comparable<MapNode>{
 		return this.edges;
 	}
 	
-//	/**
-//	 * Getter of predicted distance
-//	 * @return the distance
-//	 */
-//	public double getDistance() {
-//		return this.distance;
-//	}
-//	
-//	/**
-//	 * Setter of the predicted distance
-//	 * @param distance the predicted distance
-//	 */
-//	public void setDistance(double distance) {
-//	    this.distance = distance;
-//	}
-//
-//	/**
-//	 * Getter of the actual distance
-//	 * @return the actual distance
-//	 */
-//	public double getActualDistance() {
-//		return this.actualDistance;
-//	}
-//	
-//	/**
-//	 * Setter of the actual distance
-//	 * @param actualDistance the actual distance
-//	 */
-//	public void setActualDistance(double actualDistance) {
-//	    this.actualDistance = actualDistance;
-//	}
+	/**
+	 * Getter of predicted distance
+	 * @return the distance
+	 */
+	public double getHeuristic() {
+		return this.heuristic;
+	}
+	
+	/**
+	 * Setter of the predicted distance
+	 * @param distance the predicted distance
+	 */
+	public void setHeuristic(double distance) {
+	    this.heuristic = distance;
+	}
 	
 	/**
 	 * Find all neighbors of current node
@@ -153,7 +135,5 @@ public class MapNode implements Comparable<MapNode>{
 	public int compareTo(MapNode node) {
 		return ((Double)this.shortest).compareTo(node.shortest);
 	}
-	
-	
 	
 }
