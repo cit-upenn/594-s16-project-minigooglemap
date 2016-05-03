@@ -5,6 +5,7 @@ import geography.GeographicPoint;
 /**
  * This class will store the information about a road
  * including 2 end points, name and its type
+ * @author ZiyuChen
  */
 class Road {
 	GeographicPoint point1, point2;
@@ -41,7 +42,10 @@ class Road {
 				info.roadType.equals(this.roadType) && info.roadName.equals(this.roadName);
 	}
 	
-	/** Get the other point */
+	/**
+	 * @param pt one point of the road 
+	 * @return the other point of this road
+	 */
 	public GeographicPoint getOtherPoint(GeographicPoint pt) {
 		if (pt == null || (!pt.equals(point1) && !pt.equals(point2))){
 			throw new IllegalArgumentException();
@@ -49,7 +53,9 @@ class Road {
 		return pt.equals(point1)? point2 : point1;
 	}
 	
-	/** Return a reversed road */
+	/**
+	 * @return a reversed road
+	 */
 	public Road getReverseCopy()
 	{	
 		Road reverse = new Road(this.point2, this.point1, this.roadName, this.roadType);
@@ -76,7 +82,7 @@ class Road {
 	/**
 	 * check if they are the same road using only road name
 	 * @param roadInfo
-	 * @return
+	 * @return true if 2 roads are the same
 	 */
 	public boolean sameName(Road roadInfo){
 		return roadInfo.roadName.equals(this.roadName);
@@ -91,7 +97,9 @@ class Road {
 				this.roadName.equals(other.roadName) && this.roadType.equals(other.roadType);
 	}
 	
-	/* print stuff */
+	/**
+	 * @return the info of this road
+	 */
 	public String print() {
 		return this.point1 + " " + this.point2 + " " + this.roadName + " " + this.roadType;
 		
