@@ -27,13 +27,39 @@ public class MapNode implements Comparable<MapNode>{
 		heuristic = 0.0;
 	}
 	
-	
+	/**
+	 * Get the shortest distance
+	 * @return the shortest distance
+	 */
 	public double getShortest() {
 		return this.shortest;
 	}
 	
+	/**
+	 * Set the shortest distance
+	 * @param distance the distance to be set
+	 */
 	public void setShortest(double distance) {
 		this.shortest = distance;
+	}
+	
+	/**
+	 * Getter of predicted distance
+	 * @return the distance
+	 */
+	public double getHeuristic() {
+		return this.heuristic;
+	}
+	
+	/**
+	 * Update the shortest to be the sum of current shortest and heuristic distance
+	 */
+	public void updateShortest(GeographicPoint goal) {
+	    // update the shortest distance if calculate the heuristic value
+		this.heuristic = this.location.distance(goal);
+		if (shortest != Double.MAX_VALUE) {
+			this.shortest += heuristic;
+		}
 	}
 	
 	/**
@@ -50,22 +76,6 @@ public class MapNode implements Comparable<MapNode>{
 	 */
 	public Set<MapEdge> getEdges() {
 		return this.edges;
-	}
-	
-	/**
-	 * Getter of predicted distance
-	 * @return the distance
-	 */
-	public double getHeuristic() {
-		return this.heuristic;
-	}
-	
-	/**
-	 * Setter of the predicted distance
-	 * @param distance the predicted distance
-	 */
-	public void setHeuristic(double distance) {
-	    this.heuristic = distance;
 	}
 	
 	/**

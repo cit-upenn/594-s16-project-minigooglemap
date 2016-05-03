@@ -247,7 +247,50 @@ public class MapGraph {
 	 * @return the list of node represent the shortest route
 	 */
 	public List<GeographicPoint> aStarSearch(GeographicPoint start, GeographicPoint end, List<GeographicPoint> nodeSearched) {
-		//TODO: implementation
-		return null;
+		// sanity check
+		MapNode[] checked = sanityCheck(start, end);
+		MapNode startNode = checked[0];
+		MapNode endNode = checked[1];
+
+		// initialize variables
+		Map<MapNode, MapNode> prev = new HashMap<>();
+		PriorityQueue<MapNode> queue = new PriorityQueue<>();	
+		queue.offer(startNode);
+		startNode.setShortest(0);
+		startNode.updateShortest(end);
+		MapNode current = null;
+		
+		while (!queue.isEmpty()) {
+			current = queue.poll(); 				  // minimum in terms of shortest in the current queue
+			double curShortest = current.getShortest();
+			double curHeuristic = current.getHeuristic();
+			nodeSearched.add(current.getLocation());  // for view side to realize visualization
+
+			// exit condition
+			if (current.equals(endNode)) {
+				break;
+			}
+
+			Set<MapEdge> edges = current.getEdges();
+			for (MapEdge e : edges) {
+				// add to priority queue & prev if first visit the node
+				MapNode neighbor = e.getTail();
+				if (!prev.containsKey(neighbor)) {
+					prev.put(neighbor, current);
+					queue.offer(neighbor);
+				}
+
+				// relax procedure
+				double weight = e.getLength();
+				double neighborShortest = neighbor.getShortest();
+				if (neighborShortest > weight + curShortest - curHeuristic) {
+					neighbor.setShortest(weight + curShortest); // update shortest
+					neighbor.updateShortest(end);
+					prev.put(neighbor, current); 				// update prev
+				}
+			}
+		}
+
+		return generatePath(current, startNode, endNode, prev);
 	}
 }
