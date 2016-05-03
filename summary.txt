@@ -1,0 +1,56 @@
+CIT 594 Data Structure & Software Design Final Project Summary
+
+Group Members:
+ - Ziyu Chen (ziyuchen@seas.upenn.edu)
+ - Xiaofan Dou (xiaofand@seas.upenn.edu) 
+ - Qiannan Ling (qiannanl@seas.upenn.edu)
+
+Project Description:
+1. Idea Description:
+We designed and built an Mini-Google Map java app by integrated with Google Map JavaFx API. GMaps JavaFx API is a wrapper for Google Map JavaScript API, allowing users to interact with Google Map using pure Java API instead of through a Google-provided JavaScript API. Similar to Google Map, a google map viewer would be embedded into the app frame. 
+The Java application will have two main functionalities:
+  a. Calculate and display the shortest path between the starting point and destination : 
+    1) User can choose the points by adding a marker.
+    2) User can choose the graph algorithm he/she want to use (BFS, Dijkstra, A*).
+	b. Search Process Visualization: in order to have a deeper comprehension on different graph algorithms, we could visualize the path nodes in the explored order for different algorithms.
+
+2. Features for Requirements:
+ - Part 1: 
+    1) Define and use Interfaces:
+        - Define: GraphLoader Interface (src/util/GraphLoader), which is intended to support loading different types of base graph
+        - Use: MapLoader class(src/util/MapGraph), which implements the GraphLoader interface for the specific file data type that we extract from Google Map API
+    2) Apply Design Patterns
+      a) MVC
+          - Model: src/miniGoogleMap/DataSet
+          - View: src/miniGoogleMap/Map
+          - Controller: 
+              src/miniGoogleMap/Controller
+              src/miniGoogleMap/FetchController
+      b)Iterator: we use the iterator to go through different Collections like ArrayList, HashSet, HashMap(keys & values), etc.
+      c) Observer: we have a lot of GUI elements like buttons to be the observer using JavaFX provided methods.
+
+ - Part 2: 
+    a. Data structures: 
+        Graphs, PriorityQueue, Map, HashMap, Set, HashSet, List, LinkedList, ArrayList, Array, Queue, ArrayDeque, etc.
+    b. Java Graphics: 
+        The app is based on a Java GUI (JavaFX) with a Google Map Viewer.
+    c. Multithreading:
+        We use multithreading in FetchController to separate the time-consuming fetch operation to a separate fetch thread (like the SwingWorker for JavaFX)
+    d. Advanced Topics: 
+        Integrated with Google Map API.
+
+3. Responsibility:
+ - Xiaofan Dou: GUI implementation, merging the Google Map Viewer and graph modeling.
+ - Ziyu Chen: Geoinformation fetching implementation, Fetching data UI , map info loading/parsing Implementation.
+ - Qiannan Ling: Road Graph model implementation (roadgraph package), Search algorithm implementation.
+
+4. Clarification:
+	(1) We plan to use GMaps JavaFx API as following:
+      Fetch the Geolocations from Google Map Viewer by making API function calls, and then model the graph and store locally in some self-defined files.(Users can choose which local file to load into the viewer)
+	(2) We plan to calculate the shortest path locally and then display it on viewer. 
+      (Note: we are not asking the google map side to do the calculation for us, we just use the API to get the geoinformation of the location points and the Google Map style map view).
+
+ 
+		
+
+
