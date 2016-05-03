@@ -187,6 +187,7 @@ public class Map extends Application
 	    fetchBox.setAlignment(Pos.CENTER);
 	    
 	    mapFile = new TextField();
+	    mapFile.setPromptText("*Type example.map");
 	    fetch = new Button("Fetch Data");
 	    fetchBox.getChildren().addAll(mapFile, fetch);
 	    
