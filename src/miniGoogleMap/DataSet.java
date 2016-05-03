@@ -7,10 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.sun.media.jfxmedia.events.MarkerEvent;
 
 import geography.GeographicPoint;
-import geography.RoadSegment;
 import gmapsfx.javascript.event.UIEventType;
 import gmapsfx.javascript.object.GoogleMap;
 import gmapsfx.javascript.object.InfoWindow;
@@ -42,7 +40,6 @@ public class DataSet {
 	private MapLoader mapLoader;
 	private Set<GeographicPoint> intersections;
     private HashMap<geography.GeographicPoint,HashSet<geography.RoadSegment>>  roads;
-	//private boolean currentlyDisplayed;
 	
 	private HashMap<geography.GeographicPoint, Marker> markers;
 	
@@ -102,9 +99,6 @@ public class DataSet {
      * @param roads roads
      */
     public void setRoads(HashMap<geography.GeographicPoint,HashSet<geography.RoadSegment>>  roads) { this.roads = roads; }
-    
-    
-    //public roadgraph.MapGraph getGraph(){ return graph; }
     
     /** Return the intersections in this graph.
      * In order to keep it consistent, if getVertices in the graph returns something 
@@ -207,16 +201,7 @@ public class DataSet {
     	Set<geography.GeographicPoint> pointSet = roads.keySet();
     	return pointSet.toArray();
     }
-//    
-//    
-//    public boolean isDisplayed() {
-//    	return this.currentlyDisplayed;
-//    }
-//
-//    public void setDisplayed(boolean value) {
-//    	this.currentlyDisplayed = value;
-//    }
-    
+
     /**
      * resets the markers
      */
