@@ -28,12 +28,10 @@ public class MapLoader implements GraphLoader  {
 	@Override
 	public void createIntersectionsFile(String roadDataFile, String intersectionsFile) {
 		
+		// first map all the points to their outgoing and incoming edges
         HashMap<GeographicPoint,List<LinkedList<Road>>> map = buildMap(roadDataFile);
-		List<GeographicPoint> intersections = findIntersections(map);
-		Collection<GeographicPoint> nodes = new HashSet<GeographicPoint>();
-		for (GeographicPoint point : intersections) {
-			nodes.add(point);
-		}
+        // second find all the intersections
+		Collection<GeographicPoint> intersections = getIntersections(map);
 		
         // write the intersections into the file
 		try {
@@ -44,7 +42,7 @@ public class MapLoader implements GraphLoader  {
 			PrintWriter writer = new PrintWriter(file);
 			
 			// add edges to nodes
-			for (GeographicPoint pt : nodes) {
+			for (GeographicPoint pt : intersections) {
 				// Track the node to its next node, building up the points 
 				List<LinkedList<Road>> inAndOut = map.get(pt);
 				LinkedList<Road> outgoing = inAndOut.get(0);
@@ -52,7 +50,7 @@ public class MapLoader implements GraphLoader  {
 					HashSet<GeographicPoint> used = new HashSet<GeographicPoint>();
 					used.add(pt);
 				
-					List<GeographicPoint> pointsOnEdge = findPointsOnEdge(map, info, nodes);
+					List<GeographicPoint> pointsOnEdge = findPointsOnEdge(map, info, intersections);
 					GeographicPoint end = pointsOnEdge.remove(pointsOnEdge.size()-1);
 					writer.write(pt + " " + end + "\n");
 				}
@@ -66,12 +64,47 @@ public class MapLoader implements GraphLoader  {
 		
 	}
 	
-	// Build map that maps points to lists of lists of lines.
-	// The map returned is indexed by a GeographicPoint.  The values
-	// are lists of length two where each entry in the list is a list.
-	// The first list stores the outgoing roads while the second 
-	// stores the outgoing roads.
-	private HashMap<GeographicPoint, List<LinkedList<Road>>> buildMap(String filename){
+
+	
+	// parse the line
+	private Road parse(String line) {	
+	        
+    	String pattern = "([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s\")(.*)(\"\\s)(.*)";
+		
+    	Pattern r = Pattern.compile(pattern);
+    	Matcher _m = r.matcher(line);
+    	
+		double d1 = 0;
+		double d2 = 0;
+		double d3 = 0;
+		double d4 = 0;            		
+		String loc = "";
+		String typ = "";
+    	while (_m.find()){
+    		d1 = Double.parseDouble(_m.group(1));
+    		d2 = Double.parseDouble(_m.group(3));
+    		d3 = Double.parseDouble(_m.group(5));
+    		d4 = Double.parseDouble(_m.group(7));
+    		loc = _m.group(9);
+    		typ = _m.group(11);
+    	}
+    	
+        GeographicPoint p1 = new GeographicPoint(d1, d2);
+        GeographicPoint p2 = new GeographicPoint(d3, d4);
+    	Road road = new Road(p1, p2, loc, typ);
+    	
+    	return road;
+		
+	}
+	
+	
+	/**
+	 * maps points to lists of lists of lines for ougoing and 
+	 * incoming roads respectively
+	 * @param filename name of the .map file
+	 * @return a map of points
+	 */
+	private HashMap<GeographicPoint, List<LinkedList<Road>>> buildMap(String filename) {
 		
         HashMap<GeographicPoint,List<LinkedList<Road>>> map = 
         		new HashMap<GeographicPoint,List<LinkedList<Road>>>();
@@ -82,24 +115,37 @@ public class MapLoader implements GraphLoader  {
             // Read the lines out of the file and put them in a HashMap by points
             String nextLine = bufferedReader.readLine();
             while (nextLine != null) {
-            	// parse the line 
             	
-            	
-            	// parse the string
-            	Road line = parse(nextLine);
-            	
-            	
-            	
-            	
-            	
-            	
+            	// parse the line
+            	Road road = parse(nextLine);
             	
             	//add info to the map
-            	
-            	
-            	
-            	
-            	buildMapHelper(line, map);
+        		List<LinkedList<Road>> pt1 = map.get(road.point1);
+        		// not in map
+        		if (pt1 == null) {
+        			pt1 = new ArrayList<LinkedList<Road>>();
+        			// this list will store the outgoing edges
+        			pt1.add(new LinkedList<Road>());
+        			// this second list will store incoming edges
+        			pt1.add(new LinkedList<Road>());
+        			map.put(road.point1, pt1);
+        		}
+        		// see point1 as the point with this road as the outgoing edge
+        		List<Road> out = pt1.get(0);
+        		out.add(road);
+        		
+        		List<LinkedList<Road>> pt2 = map.get(road.point2);
+        		// not yet in map
+        		if (pt2 == null) {
+        			pt2 = new ArrayList<LinkedList<Road>>();
+        			pt2.add(new LinkedList<Road>());
+        			pt2.add(new LinkedList<Road>());
+        			map.put(road.point2, pt2);
+        		}
+        		// see point2 as the point with this road as the incoming edge
+        		List<Road> in = pt2.get(1);
+        		in.add(road);
+        		
             	nextLine = bufferedReader.readLine();
             }
             bufferedReader.close();
@@ -111,81 +157,60 @@ public class MapLoader implements GraphLoader  {
 	}
 	
 	
-	// Add the next line read from the file to the points map.
-	private static void buildMapHelper(Road line,
-						HashMap<GeographicPoint,List<LinkedList<Road>>> map) {
-		List<LinkedList<Road>> pt1Infos = map.get(line.point1);
-		if (pt1Infos == null) {
-			pt1Infos = new ArrayList<LinkedList<Road>>();
-			pt1Infos.add(new LinkedList<Road>());
-			pt1Infos.add(new LinkedList<Road>());
-			map.put(line.point1, pt1Infos);
-		}
-		List<Road> outgoing = pt1Infos.get(0);
-		outgoing.add(line);
-		
-		List<LinkedList<Road>> pt2Infos = map.get(line.point2);
-		if (pt2Infos == null) {
-			pt2Infos = new ArrayList<LinkedList<Road>>();
-			pt2Infos.add(new LinkedList<Road>());
-			pt2Infos.add(new LinkedList<Road>());
-			map.put(line.point2, pt2Infos);
-		}
-		List<Road> incoming = pt2Infos.get(1);
-		incoming.add(line);
-		
-	}
 	
-	
-	
-	// Find all the intersections. 
-	// Including dead ends, intersections between different roads
-	private List<GeographicPoint> findIntersections(HashMap<GeographicPoint,
-			List<LinkedList<Road>>> pointMap) {
-		// Now find the intersections.  These are roads that do not have
-		// Exactly 1 or 2 roads coming in and out, where the roads in
-		// match the roads out.
+	/**
+	 * find intersections
+	 * @param map
+	 * @return list of intersections
+	 */
+	private HashSet<GeographicPoint> getIntersections (HashMap<GeographicPoint, List<LinkedList<Road>>> map) {
+
 		List<GeographicPoint> intersections = new LinkedList<GeographicPoint>();
-		for (GeographicPoint pt : pointMap.keySet()) {
-			List<LinkedList<Road>> roadsInAndOut = pointMap.get(pt);
-			LinkedList<Road> roadsOut = roadsInAndOut.get(0);
-			LinkedList<Road> roadsIn = roadsInAndOut.get(1);
+		HashSet<GeographicPoint> intersectionsHash = new HashSet<GeographicPoint>();
+		
+		// iterate through each point
+		for (GeographicPoint pt : map.keySet()) {
 			
-			boolean isNode = true;
+			boolean isInersection = true;
+			List<LinkedList<Road>> allRoads = map.get(pt);
+			LinkedList<Road> out = allRoads.get(0);
+			LinkedList<Road> in = allRoads.get(1);
 			
-			if (roadsIn.size() == 1 && roadsOut.size() == 1) {
-				// If these are the reverse of each other, then this is
-				// and intersection (dead end)
-				if (!(roadsIn.get(0).point1.equals(roadsOut.get(0).point2) &&
-						roadsIn.get(0).point2.equals(roadsOut.get(0).point1))
-						&& roadsIn.get(0).roadName.equals(roadsOut.get(0).roadName)) {
-					isNode = false;
+			// only one edge out and one edge in
+			if (in.size() == 1 && out.size() == 1) {
+				// if the edge out and the edge in are the same edge 
+				// this is the a dead end
+				if (in.get(0).sameName(out.get(0))){
+					if (!(in.get(0).point1.equals(out.get(0).point2) 
+							&& in.get(0).point2.equals(out.get(0).point1))){
+						isInersection = false;
+					}
 				}
 			}
-			if (roadsIn.size() == 2 && roadsOut.size() == 2) {
+			
+			if (in.size() == 2 && out.size() == 2) {
 				// If all the road segments have the same name, 
 				// And there are two pairs of reversed nodes, then 
 				// this is not an intersection because the roads pass
 				// through.
-			
-				String name = roadsIn.get(0).roadName;
+				Road in1 = in.get(0);
+				Road in2 = in.get(1);
+				Road out1 = out.get(0);
+				Road out2 = out.get(1);
+				String name = in.get(0).roadName;
 				boolean sameName = true;
-				for (Road info : roadsIn) {
+				
+				for (Road info : in) {
 					if (!info.roadName.equals(name)) {
 						sameName = false;
 					}
 				}
-				for (Road info : roadsOut) {
+				for (Road info : out) {
 					if (!info.roadName.equals(name)) {
 						sameName = false;
 					}
 				}
 				
-				Road in1 = roadsIn.get(0);
-				Road in2 = roadsIn.get(1);
-				Road out1 = roadsOut.get(0);
-				Road out2 = roadsOut.get(1);
-		
 				boolean passThrough = false;
 				if ((in1.isReverse(out1) && in2.isReverse(out2)) ||
 						(in1.isReverse(out2) && in2.isReverse(out1))) {
@@ -194,39 +219,44 @@ public class MapLoader implements GraphLoader  {
 				} 
 				
 				if (sameName && passThrough) {
-					isNode = false;
+					isInersection = false;
 				} 
-
-			} 
-			if (isNode) {
+			}
+			
+			if (isInersection == true) {
 				intersections.add(pt);
 			}
 		}
-		return intersections;
+		
+		// get rid of duplicate
+		
+		for (GeographicPoint point : intersections) {
+			intersectionsHash.add(point);
+		}
+		
+		return intersectionsHash;
 	}
 
 	
 	@Override
-	public void loadRoadMap(String filename, roadgraph.MapGraph map,  
+	public void loadRoadMap(String filename, roadgraph.MapGraph map, 
 			HashMap<GeographicPoint,HashSet<RoadSegment>> segments, 
-			Set<GeographicPoint> intersectionsToLoad)
-	{
-		Collection<GeographicPoint> nodes = new HashSet<GeographicPoint>();
+			Set<GeographicPoint> intersectionsToLoad) {
+
         HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap = 
         		buildMap(filename);
 		
         // Add the nodes to the graph
-		List<GeographicPoint> intersections = findIntersections(pointMap);
+        HashSet<GeographicPoint> intersections = getIntersections(pointMap);
 		for (GeographicPoint pt : intersections) {
 			map.addVertex(pt);
 			if (intersectionsToLoad != null) {
 				intersectionsToLoad.add(pt);
 			}
-			nodes.add(pt);
+			intersections.add(pt);
 		}
-		
-		
-		addEdgesAndSegments(nodes, pointMap, map, segments);
+
+		addEdgesAndSegments(intersections, pointMap, map, segments);
 	}
 
 	
@@ -234,10 +264,8 @@ public class MapLoader implements GraphLoader  {
 	// add the edges and build the road segments if the segments
 	// map is not null.
 	private static void addEdgesAndSegments(Collection<GeographicPoint> nodes, 
-			HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
-			MapGraph map, 
-			HashMap<GeographicPoint,HashSet<RoadSegment>> segments)
-	{
+			HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap, MapGraph map, 
+			HashMap<GeographicPoint,HashSet<RoadSegment>> segments) {
 	
 		// Now we need to add the edges
 		// This is the tricky part
@@ -295,10 +323,8 @@ public class MapLoader implements GraphLoader  {
 		return dist;
 	}
 	
-	private static List<GeographicPoint>
-	findPointsOnEdge(HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
-		Road info, Collection<GeographicPoint> nodes) 
-	{
+	private static List<GeographicPoint> findPointsOnEdge(HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
+		Road info, Collection<GeographicPoint> nodes)  {
 		List<GeographicPoint> toReturn = new LinkedList<GeographicPoint>();
 		GeographicPoint pt = info.point1;
 		GeographicPoint end = info.point2;
@@ -323,37 +349,5 @@ public class MapLoader implements GraphLoader  {
 		toReturn.add(end);
 		
 		return toReturn;
-	}
-
-	
-	// parse the line
-	private Road parse(String line) {	
-	        
-    	String pattern = "([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s)([\\S]+)(\\s\")(.*)(\"\\s)(.*)";
-		
-    	Pattern r = Pattern.compile(pattern);
-    	Matcher _m = r.matcher(line);
-    	
-		double d1 = 0;
-		double d2 = 0;
-		double d3 = 0;
-		double d4 = 0;            		
-		String loc = "";
-		String typ = "";
-    	while (_m.find()){
-    		d1 = Double.parseDouble(_m.group(1));
-    		d2 = Double.parseDouble(_m.group(3));
-    		d3 = Double.parseDouble(_m.group(5));
-    		d4 = Double.parseDouble(_m.group(7));
-    		loc = _m.group(9);
-    		typ = _m.group(11);
-    	}
-    	
-        GeographicPoint p1 = new GeographicPoint(d1, d2);
-        GeographicPoint p2 = new GeographicPoint(d3, d4);
-    	Road road = new Road(p1, p2, loc, typ);
-    	
-    	return road;
-		
 	}
 }	

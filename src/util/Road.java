@@ -70,6 +70,10 @@ class Road {
 		return roadInfo.roadName.equals(this.roadName) && roadInfo.roadType.equals(this.roadType);
 	}
 	
+	public boolean sameName(Road roadInfo){
+		return roadInfo.roadName.equals(this.roadName);
+	}
+	
 
 	public boolean isReverse(Road other) {
 		return this.point1.equals(other.point2) && this.point2.equals(other.point1) &&
