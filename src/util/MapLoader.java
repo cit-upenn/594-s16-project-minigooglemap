@@ -323,6 +323,7 @@ public class MapLoader implements GraphLoader  {
 		return dist;
 	}
 	
+	
 	private static List<GeographicPoint> findPointsOnEdge(HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
 		Road info, Collection<GeographicPoint> nodes)  {
 		List<GeographicPoint> toReturn = new LinkedList<GeographicPoint>();
