@@ -24,7 +24,7 @@ public class MapMaker {
         DataFetcher fetcher = new DataFetcher(bounds);
         
         System.out.println("2");
-        
+        	
         JsonObject data = fetcher.getData();
         
         System.out.println("3");

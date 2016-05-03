@@ -22,6 +22,7 @@ import roadgraph.MapGraph;
 
 /**
  * This class reads different kinds of files into different graph structures.
+ * @author ZiyuChen
  */
 public class MapLoader implements GraphLoader  {
 	
@@ -103,7 +104,7 @@ public class MapLoader implements GraphLoader  {
 	
 	
 	/**
-	 * maps points to lists of lists of lines for ougoing and 
+	 * maps points to lists of lists of lines for outgoing and 
 	 * incoming roads respectively
 	 * @param filename name of the .map file
 	 * @return a map of points
@@ -163,7 +164,7 @@ public class MapLoader implements GraphLoader  {
 	/**
 	 * get the intersections set directly from .map file
 	 * @param filename
-	 * @return
+	 * @return a set of intersections instead of list
 	 */
 	private HashSet<GeographicPoint> getIntersectionFromFile (String filename){
 		 HashMap<GeographicPoint,List<LinkedList<Road>>> map = buildMap(filename);
@@ -241,9 +242,7 @@ public class MapLoader implements GraphLoader  {
 				intersections.add(pt);
 			}
 		}
-		
 		// get rid of duplicate
-		
 		for (GeographicPoint point : intersections) {
 			intersectionsHash.add(point);
 		}
@@ -329,7 +328,7 @@ public class MapLoader implements GraphLoader  {
 	 * @param start
 	 * @param end
 	 * @param path
-	 * @return
+	 * @return the length of the road
 	 */
 	private static double getRoadLength(GeographicPoint start, GeographicPoint end,
 			List<GeographicPoint> path)
@@ -349,7 +348,7 @@ public class MapLoader implements GraphLoader  {
 	 * @param pointMap
 	 * @param info
 	 * @param nodes
-	 * @return
+	 * @return list of GeographicPoint
 	 */
 	private static List<GeographicPoint> findPointsOnEdge(HashMap<GeographicPoint,List<LinkedList<Road>>> pointMap,
 		Road info, Collection<GeographicPoint> nodes)  {
