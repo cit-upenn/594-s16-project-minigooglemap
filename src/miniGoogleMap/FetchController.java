@@ -139,7 +139,7 @@ public class FetchController {
 	 * writes geographic data flat file parameters arr contains the coordinates of the bounds for the map region
 	 * @param filename
 	 * @param arr
-	 * @return
+	 * @return boolean indicating if the file needs to re-parse this time (if new file, return true)
 	 */
     public boolean writeDataToFile(String filename, float[] arr) {
      	MapMaker mm = new MapMaker(arr);

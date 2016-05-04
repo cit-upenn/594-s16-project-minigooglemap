@@ -15,12 +15,20 @@ import javax.json.*;
  */
 public class DataFetcher {
     private final String[] HIGHWAYS = {"motorway", "trunk", "primary", "secondary", "tertiary", "unclassified", "residential", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "living_street"};
-
     private String query;
+    
+    /**
+     * constructor using bounds
+     * @param bounds
+     */
     public DataFetcher(float[] bounds) {
         this.query = this.constructQuery(bounds);
     }
 
+    /**
+     * setup connection to get data
+     * @return the JsonObject representation of the data
+     */
     public JsonObject getData() {
         HttpURLConnection conn = null;
         try {
@@ -44,6 +52,11 @@ public class DataFetcher {
         }
     }
 
+    /**
+     * To generate the query
+     * @param boundsArray the bounds Array
+     * @return the generated query
+     */
     public String constructQuery(float[] boundsArray) {
         String q = "[out:json];(";
         String bounds = "(";

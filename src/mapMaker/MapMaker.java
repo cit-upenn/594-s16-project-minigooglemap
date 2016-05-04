@@ -14,10 +14,19 @@ public class MapMaker {
     float[] bounds;
     HashMap<Integer, Location> nodes = new HashMap<Integer, Location>();
 
+    /**
+     * constructor
+     * @param bounds map bounds for the map
+     */
     public MapMaker(float[] bounds) {
         this.bounds = bounds;
     }
 
+    /**
+     * parse the file of map data
+     * @param filename the file to be parsed
+     * @return a boolean indicating if the file is successfully parsed
+     */
     public boolean parseData(String filename) {
     	
     	System.out.println("1");
@@ -69,6 +78,10 @@ public class MapMaker {
         return true;
     }
 
+    /**
+     * using upenn map for testing
+     * @param args
+     */
     public static void main(String[] args) {
     	
     	float[] bound_arr = {(float) 50.6,(float) 7.0,(float) 50.8,(float) 7.3};
@@ -77,6 +90,11 @@ public class MapMaker {
     }
 }
 
+/**
+ * wrap up a location using the latitude and longitude
+ * @author xiaofan dou
+ *
+ */
 class Location {
     private double lat;
     private double lon;
