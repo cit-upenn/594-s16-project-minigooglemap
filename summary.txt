@@ -40,7 +40,7 @@ The Java application will have two main functionalities:
     c. Multithreading:
         We use multithreading in FetchController to separate the time-consuming fetch operation to a separate fetch thread (like the SwingWorker for JavaFX)
     d. Advanced Topics: 
-        Integrated with Google Map API.
+        Integrated with Google Map API and Overpass API.
 
 3. Responsibility:
  - Xiaofan Dou: GUI implementation, merging the Google Map Viewer and graph modeling.
@@ -52,3 +52,4 @@ The Java application will have two main functionalities:
       Fetch the Geolocations from Google Map Viewer by making API function calls, and then model the graph and store locally in some self-defined files.(Users can choose which local file to load into the viewer)
 	(2) We plan to calculate the shortest path locally and then display it on viewer. 
       (Note: we are not asking the google map side to do the calculation for us, we just use the API to get the geoinformation of the location points and the Google Map style map view).
+    (3) The packages whose names begin with gmapsfx are external API packages, other packages are our works.
